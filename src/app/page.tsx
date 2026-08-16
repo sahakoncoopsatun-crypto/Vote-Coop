@@ -6,7 +6,7 @@ export default async function Home() {
   const settings = await prisma.setting.findMany({
     where: {
       key: {
-        in: ['countdown_target', 'election_date', 'election_time', 'election_location']
+        in: ['homepage_title', 'homepage_subtitle', 'countdown_target', 'election_date', 'election_time', 'election_location']
       }
     }
   });
@@ -16,6 +16,8 @@ export default async function Home() {
     return acc;
   }, {} as any);
 
+  const titleText = settingsMap['homepage_title'] || 'ศูนย์ข้อมูลข่าวสารการเลือกตั้งและการประชุมใหญ่สามัญ \n ประจำปี 2569';
+  const subtitleText = settingsMap['homepage_subtitle'] || 'สหกรณ์ออมทรัพย์สาธารณสุขสตูล จำกัด \n ร่วมเป็นส่วนหนึ่งในการกำหนดทิศทางเพื่อความมั่นคงของมวลหมู่สมาชิก';
   const targetDateStr = settingsMap['countdown_target'] || '2026-11-21T09:00:00+07:00';
   const electionDate = settingsMap['election_date'] || '21 พฤศจิกายน 2569';
   const electionTime = settingsMap['election_time'] || '09:00 - 15:00 น.';
@@ -24,12 +26,11 @@ export default async function Home() {
   return (
     <div className="animate-fade-in">
       <section className="text-center mb-8" style={{ padding: '4rem 0 2rem' }}>
-        <h1 className="mb-4" style={{ fontSize: '2.5rem', color: 'var(--primary-color)' }}>
-          ศูนย์ข้อมูลข่าวสารการเลือกตั้งและการประชุมใหญ่สามัญ <br /> ประจำปี 2569
+        <h1 className="mb-4" style={{ fontSize: '2.5rem', color: 'var(--primary-color)', whiteSpace: 'pre-line' }}>
+          {titleText}
         </h1>
-        <p className="mb-8" style={{ fontSize: '1.2rem', color: 'var(--text-light)', maxWidth: '800px', margin: '0 auto 2rem' }}>
-          สหกรณ์ออมทรัพย์สาธารณสุขสตูล จำกัด <br/>
-          ร่วมเป็นส่วนหนึ่งในการกำหนดทิศทางเพื่อความมั่นคงของมวลหมู่สมาชิก
+        <p className="mb-8" style={{ fontSize: '1.2rem', color: 'var(--text-light)', maxWidth: '800px', margin: '0 auto 2rem', whiteSpace: 'pre-line' }}>
+          {subtitleText}
         </p>
 
         <CountdownTimer targetDateStr={targetDateStr} />
