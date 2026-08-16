@@ -5,7 +5,14 @@ import { cookies } from 'next/headers';
 export async function POST(request: Request) {
   const { username, password } = await request.json();
 
-  const admin = await prisma.admin.findUnique({ where: { username } });
+  const admin = await prisma.admin.findFirst({ 
+    where: { 
+      username: {
+        equals: username,
+        mode: 'insensitive'
+      } 
+    } 
+  });
 
   // In real app, you MUST use bcrypt or similar to compare hashed passwords
   if (admin && admin.password === password) {
