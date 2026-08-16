@@ -21,6 +21,7 @@ export default function AdminHeader() {
         <Link href="/admin/officers">ใบสมัครเจ้าหน้าที่</Link>
         <Link href="/admin/news">จัดการข่าวสาร</Link>
         <Link href="/admin/agendas">จัดการวาระประชุม</Link>
+        <Link href="/admin/settings">⚙️ ตั้งค่า</Link>
         <Link href="/">กลับหน้าหลัก</Link>
         <form action={logoutAction}>
           <button type="submit" style={{ 
