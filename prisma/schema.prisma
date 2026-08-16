@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Admin {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  password String
+}
+
+model Candidate {
+  id          Int      @id @default(autoincrement())
+  name        String
+  position    String   // "President", "Committee-Hospital", "Committee-SSJ", "Auditor"
+  number      Int?     // Candidate number (เบอร์ผู้สมัคร)
+  vision      String?
+  policy      String?
+  imageUrl    String?
+  votes       Int      @default(0)
+  isWinner    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Agenda {
+  id              Int      @id @default(autoincrement())
+  number          Int      
+  title           String   
+  description     String?  
+  result          String   
+  approveVotes    Int      @default(0)
+  disapproveVotes Int      @default(0)
+  imageUrl        String?
+  fileUrl         String?
+  createdAt       DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model News {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  imageUrl  String?
+  fileUrl   String?
+  createdAt DateTime @default(now())
+}
+
+model Eligibility {
+  id             Int      @id @default(autoincrement())
+  memberId       String   @unique
+  idCard         String   @unique
+  name           String
+  pollingStation   String?
+  organization     String?  // สังกัดหน่วยงาน เช่น โรงพยาบาลสตูล
+  sequenceNumber   Int?     // ลำดับที่ในบัญชีรายชื่อ
+  registrationDesk Int?     // โต๊ะลงทะเบียน
+  canVote          Boolean  @default(true)
+  canAttend        Boolean  @default(true)
+  remark           String?
+}
+
+model District {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  quota        Int      @default(0)
+  applications OfficerApplication[]
+}
+
+model OfficerApplication {
+  id         Int      @id @default(autoincrement())
+  memberId   String
+  name       String
+  phone      String
+  
+  jobTitle     String?  // ตำแหน่ง
+  workplace    String?  // สังกัด
+  address      String?  // ที่อยู่ปัจจุบัน บ้านเลขที่
+  moo          String?  // หมู่ที่
+  trok         String?  // ตรอก
+  soi          String?  // ซอย
+  road         String?  // ถนน
+  subDistrict  String?  // ตำบล
+  districtName String?  // อำเภอตามที่อยู่
+  province     String?  // จังหวัด
+  zipcode      String?  // รหัสไปรษณีย์
+  imageUrl     String?  // รูปประจำตัว
+
+  districtId Int
+  district   District @relation(fields: [districtId], references: [id])
+  status     String   @default("pending") // pending, approved, rejected
+  createdAt  DateTime @default(now())
+}
+
+model CandidateApplication {
+  id         Int      @id @default(autoincrement())
+  memberId   String
+  name       String
+  phone      String?
+  title      String?
+  position   String
+  vision     String?
+  policy     String?
+  imageUrl   String?
+
+  // Extended fields for printed application
+  age            String?
+  address        String?
+  moo            String?
+  road           String?
+  subDistrict    String?
+  district       String?
+  province       String?
+  workplace      String?
+  jobTitle       String?
+  idLine         String?
+  educationLevel String?
+  educationMajor String?
+  educationInst  String?
+  workHistory    String?
+  
+  guarantee1Name String?
+  guarantee1Id   String?
+  guarantee2Name String?
+  guarantee2Id   String?
+  guarantee3Name String?
+  guarantee3Id   String?
+
+  status     String   @default("pending") // pending, approved, rejected
+  createdAt  DateTime @default(now())
+}

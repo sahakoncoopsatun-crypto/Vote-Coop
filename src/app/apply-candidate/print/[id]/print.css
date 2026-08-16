@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+
+@font-face {
+  font-family: 'THSarabunNew';
+  src: url('/fonts/THSarabunNew.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.print-container {
+  font-family: 'THSarabunNew', 'Sarabun', sans-serif;
+  color: black;
+  font-size: 16pt; /* Standard government size */
+  line-height: 1.5;
+  
+  /* Overlay to hide the app layout on screen */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  min-height: 100vh;
+  z-index: 99999;
+  background: #525659;
+  overflow-y: auto;
+}
+
+.a4-page {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 3cm 2cm 2cm 2.5cm; /* Standard TH government margins */
+  margin: 20px auto;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.fill-text {
+  color: #000080; /* Dark blue for filled text */
+  text-align: center;
+  padding: 0 5px;
+  font-size: 15pt;
+}
+
+.dotted-bg {
+  min-height: 96px; /* 3 lines minimum */
+  line-height: 32px;
+  background-image: radial-gradient(circle, #000 1px, transparent 1.5px);
+  background-size: 6px 32px;
+  background-position: 0 28px;
+  color: #000080;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 0 10px;
+  font-size: 15pt;
+  margin-top: 5px;
+}
+
+.indent {
+  padding-left: 2.5cm;
+}
+
+/* Print specific styles */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  
+  body * {
+    visibility: hidden;
+  }
+  
+  .print-container, .print-container * {
+    visibility: visible;
+  }
+  
+  .print-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+  
+  .a4-page {
+    box-shadow: none !important;
+    margin: 0 !important;
+    page-break-after: always;
+  }
+}

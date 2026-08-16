@@ -1,0 +1,65 @@
+@page {
+  size: A4;
+  margin: 2cm;
+}
+
+body {
+  background: white !important;
+  color: black !important;
+  font-family: 'Sarabun', 'Prompt', sans-serif !important;
+}
+
+/* Hide everything except the print container when printing */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-area, #print-area * {
+    visibility: visible;
+  }
+  #print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.print-table th, .print-table td {
+  border: 1px solid #000;
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 14pt;
+}
+
+.print-table th {
+  background-color: #f0f0f0 !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.signature-box {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.signature-line {
+  text-align: center;
+  width: 300px;
+}

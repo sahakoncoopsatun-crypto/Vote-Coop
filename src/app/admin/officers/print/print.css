@@ -1,0 +1,128 @@
+@page {
+  size: A4;
+  margin: 2cm;
+}
+
+body {
+  background: white !important;
+  color: black !important;
+  font-family: 'Sarabun', 'Prompt', sans-serif !important;
+}
+
+/* Hide everything except the print container when printing */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-container, .print-container * {
+    visibility: visible;
+  }
+  .print-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  
+  /* Hide navbar and footer if they are rendered by a layout */
+  nav, header, footer, .navbar, .footer {
+    display: none !important;
+  }
+}
+
+.print-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+}
+
+.print-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid black;
+  padding-bottom: 1rem;
+}
+
+.print-header h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+  color: black;
+}
+
+.print-header h2 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  color: black;
+  font-weight: normal;
+}
+
+.print-header p {
+  font-size: 1rem;
+  margin: 0;
+  color: #333;
+}
+
+.print-summary {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+}
+
+.print-summary p {
+  margin-top: 0;
+}
+
+.district-section {
+  margin-bottom: 2.5rem;
+  page-break-inside: avoid;
+}
+
+.district-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: black;
+  border-left: 4px solid black;
+  padding-left: 0.5rem;
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.print-table th, .print-table td {
+  border: 1px solid black;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.print-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.no-data {
+  font-style: italic;
+  color: #666;
+  text-align: center;
+  padding: 1rem;
+  border: 1px dashed #ccc;
+}
+
+.print-signatures {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 4rem;
+  page-break-inside: avoid;
+}
+
+.signature-box {
+  text-align: center;
+}
+
+.signature-box p {
+  margin: 0.5rem 0;
+}
