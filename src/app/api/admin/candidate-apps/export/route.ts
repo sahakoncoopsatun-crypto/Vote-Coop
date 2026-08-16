@@ -120,7 +120,7 @@ export async function GET() {
 
             if (imageBuffer) {
               const imageId = workbook.addImage({
-                buffer: imageBuffer,
+                buffer: imageBuffer as any, // Bypass strict Buffer type check
                 extension: extension as 'png' | 'jpeg',
               });
 
@@ -140,7 +140,7 @@ export async function GET() {
 
     const buffer = await workbook.xlsx.writeBuffer();
 
-    return new NextResponse(buffer, {
+    return new NextResponse(buffer as unknown as BodyInit, {
       status: 200,
       headers: {
         'Content-Disposition': 'attachment; filename="candidate_applications.xlsx"',

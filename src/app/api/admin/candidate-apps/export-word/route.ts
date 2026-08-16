@@ -61,23 +61,29 @@ export async function GET() {
         if (app.imageUrl) {
           try {
             let imageBuffer: Buffer | null = null;
+            let extension = 'png';
             if (app.imageUrl.startsWith('/')) {
               const filePath = path.join(process.cwd(), 'public', app.imageUrl);
               if (fs.existsSync(filePath)) {
                 imageBuffer = fs.readFileSync(filePath);
+                const ext = path.extname(filePath).toLowerCase();
+                if (ext === '.jpg' || ext === '.jpeg') extension = 'jpg';
               }
             } else if (app.imageUrl.startsWith('http')) {
               const res = await fetch(app.imageUrl);
               if (res.ok) {
                 const arrayBuffer = await res.arrayBuffer();
                 imageBuffer = Buffer.from(arrayBuffer);
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('jpeg') || contentType.includes('jpg')) extension = 'jpg';
               }
             }
 
             if (imageBuffer) {
               imageRun = new ImageRun({
-                data: imageBuffer,
+                data: Uint8Array.from(imageBuffer),
                 transformation: { width: 60, height: 75 },
+                type: extension as 'png' | 'jpg', // Use jpg for docx
               });
             }
           } catch (err) {
@@ -137,7 +143,7 @@ export async function GET() {
 
     const buffer = await Packer.toBuffer(doc);
 
-    return new NextResponse(buffer, {
+    return new NextResponse(buffer as unknown as BodyInit, {
       status: 200,
       headers: {
         'Content-Disposition': 'attachment; filename="candidate_applications.docx"',
