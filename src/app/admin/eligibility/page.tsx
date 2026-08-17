@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import { uploadEligibility, updateElectionSettings } from '../actions';
-import Link from 'next/link';
-import EligibilityUploadForm from './EligibilityUploadForm';
+import { updateElectionSettings } from '../actions';
+import EligibilityManager from './EligibilityManager';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,8 +16,6 @@ export default async function AdminEligibility() {
   const agmTime = getSetting('agm_time', '');
   const agmLocation = getSetting('agm_location', '');
 
-  const eligibilityCount = await prisma.eligibility.count();
-
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
@@ -28,17 +25,12 @@ export default async function AdminEligibility() {
         </a>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
-        <div style={{ padding: '1.5rem', background: 'white', borderRadius: '8px', border: '1px solid #dee2e6' }}>
-          <h3 style={{ marginBottom: '1.5rem', color: '#007bff' }}>อัปโหลดรายชื่อ (จำนวนที่มีในระบบตอนนี้: {eligibilityCount.toLocaleString()} รายชื่อ)</h3>
-          <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '1.5rem' }}>
-            * หมายเหตุ: การอัปโหลดไฟล์ใหม่ จะเป็นการลบข้อมูลรายชื่อเดิมทั้งหมดและแทนที่ด้วยข้อมูลในไฟล์นี้
-          </p>
-          <EligibilityUploadForm action={uploadEligibility} />
-        </div>
+      <div style={{ marginBottom: '2rem' }}>
+        <EligibilityManager />
+      </div>
 
-        <div style={{ padding: '1.5rem', background: 'white', borderRadius: '8px', border: '1px solid #dee2e6' }}>
-          <h3 style={{ marginBottom: '1.5rem', color: '#28a745' }}>ตั้งค่า กำหนดการ วัน/เวลา/สถานที่</h3>
+      <div style={{ padding: '1.5rem', background: 'white', borderRadius: '8px', border: '1px solid #dee2e6' }}>
+        <h3 style={{ marginBottom: '1.5rem', color: '#28a745' }}>ตั้งค่า กำหนดการ วัน/เวลา/สถานที่</h3>
           <form action={updateElectionSettings} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <h4 style={{ margin: '0', color: '#007bff', borderBottom: '1px solid #eee', paddingBottom: '0.5rem' }}>กำหนดการเลือกตั้ง</h4>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>

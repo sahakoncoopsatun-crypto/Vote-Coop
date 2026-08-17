@@ -262,3 +262,122 @@ export async function uploadEligibility(formData: FormData) {
 
   revalidatePath('/admin/eligibility');
 }
+
+// === NEW ELIGIBILITY MANAGEMENT ACTIONS ===
+
+export async function searchEligibility(query: string, skip: number = 0, take: number = 50) {
+  const where = query ? {
+    OR: [
+      { name: { contains: query } },
+      { memberId: { contains: query } },
+      { idCard: { contains: query } }
+    ]
+  } : {};
+
+  const [data, total] = await Promise.all([
+    prisma.eligibility.findMany({
+      where,
+      skip,
+      take,
+      orderBy: { memberId: 'asc' }
+    }),
+    prisma.eligibility.count({ where })
+  ]);
+
+  return { data, total };
+}
+
+export async function saveSingleEligibility(data: any) {
+  const { id, memberId, idCard, name, canVote, canAttend, pollingStation, organization, remark } = data;
+  
+  // Check if memberId or idCard already exists
+  const existing = await prisma.eligibility.findFirst({
+    where: {
+      OR: [
+        { memberId },
+        { idCard }
+      ],
+      NOT: id ? { id } : undefined
+    }
+  });
+
+  if (existing) {
+    throw new Error(`ข้อมูลซ้ำ! พบเลขสมาชิกหรือบัตรประชาชนนี้ในระบบแล้ว (ชื่อ: ${existing.name})`);
+  }
+
+  const payload = {
+    memberId,
+    idCard,
+    name,
+    canVote: Boolean(canVote),
+    canAttend: Boolean(canAttend),
+    pollingStation,
+    organization,
+    remark
+  };
+
+  if (id) {
+    await prisma.eligibility.update({ where: { id }, data: payload });
+  } else {
+    await prisma.eligibility.create({ data: payload });
+  }
+
+  revalidatePath('/admin/eligibility');
+  return { success: true };
+}
+
+export async function deleteSingleEligibility(id: number) {
+  await prisma.eligibility.delete({ where: { id } });
+  revalidatePath('/admin/eligibility');
+  return { success: true };
+}
+
+export async function checkEligibilityDuplicates(dataList: any[]) {
+  const memberIds = dataList.map((d: any) => d.memberId).filter(Boolean);
+  const idCards = dataList.map((d: any) => d.idCard).filter(Boolean);
+
+  const existing = await prisma.eligibility.findMany({
+    where: {
+      OR: [
+        { memberId: { in: memberIds } },
+        { idCard: { in: idCards } }
+      ]
+    },
+    select: { memberId: true, idCard: true, name: true }
+  });
+
+  return existing;
+}
+
+export async function importEligibilityData(dataList: any[], mode: 'append' | 'overwrite') {
+  if (mode === 'overwrite') {
+    await prisma.eligibility.deleteMany({});
+  }
+
+  const formattedData = dataList.map(row => ({
+    memberId: row.memberId?.toString().trim(),
+    idCard: row.idCard?.toString().trim(),
+    name: row.name?.toString().trim(),
+    pollingStation: row.pollingStation?.toString().trim() || null,
+    organization: row.organization?.toString().trim() || null,
+    canVote: row.canVote,
+    canAttend: row.canAttend,
+    remark: row.remark?.toString().trim() || null
+  })).filter(r => r.memberId && r.idCard && r.name);
+
+  if (mode === 'append') {
+    // Delete existing intersecting records so they get overwritten with the new ones
+    const memberIds = formattedData.map(d => d.memberId);
+    await prisma.eligibility.deleteMany({
+      where: { memberId: { in: memberIds } }
+    });
+  }
+
+  await prisma.eligibility.createMany({
+    data: formattedData,
+    skipDuplicates: true
+  });
+
+  revalidatePath('/admin/eligibility');
+  return { success: true, count: formattedData.length };
+}
