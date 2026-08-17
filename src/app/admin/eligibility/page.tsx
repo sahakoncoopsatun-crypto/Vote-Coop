@@ -69,7 +69,6 @@ export default async function AdminEligibility() {
             </button>
           </form>
         </div>
-      </div>
     </div>
   );
 }
