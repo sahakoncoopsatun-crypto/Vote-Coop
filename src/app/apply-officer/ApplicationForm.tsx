@@ -3,12 +3,19 @@
 import { useState } from 'react';
 import { submitApplication } from './actions';
 
-export default function ApplicationForm({ districts }: { districts: any[] }) {
+export default function ApplicationForm({ districts, terms, requireFiles }: { districts: any[], terms: string, requireFiles: boolean }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!acceptedTerms) {
+      alert('กรุณายอมรับเงื่อนไขการรับสมัครก่อน');
+      return;
+    }
+
     setIsSubmitting(true);
     setMessage({ type: '', text: '' });
     
@@ -27,10 +34,55 @@ export default function ApplicationForm({ districts }: { districts: any[] }) {
     setIsSubmitting(false);
   };
 
+  if (showTerms) {
+    return (
+      <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', border: '1px solid #dee2e6', textAlign: 'center' }}>
+        <h3 style={{ marginBottom: '1.5rem', color: '#007bff' }}>เงื่อนไขการรับสมัคร</h3>
+        <div style={{ 
+          background: '#f8f9fa', 
+          padding: '1.5rem', 
+          borderRadius: '8px', 
+          textAlign: 'left', 
+          marginBottom: '2rem',
+          minHeight: '150px',
+          whiteSpace: 'pre-wrap',
+          border: '1px solid #e9ecef'
+        }}>
+          {terms || 'ยังไม่ได้กำหนดเงื่อนไข'}
+        </div>
+        
+        <button 
+          onClick={() => {
+            setAcceptedTerms(true);
+            setShowTerms(false);
+          }}
+          style={{
+            padding: '1rem 2rem',
+            background: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            cursor: 'pointer'
+          }}
+        >
+          ฉันได้อ่านและยอมรับเงื่อนไข
+        </button>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} style={{ background: 'white', padding: '2rem', borderRadius: '8px', border: '1px solid #dee2e6' }}>
       <h3 style={{ marginBottom: '1.5rem', color: '#007bff' }}>กรอกข้อมูลสมัครเจ้าหน้าที่</h3>
       
+      <div style={{ marginBottom: '1.5rem', textAlign: 'right' }}>
+        <a href="/apply-officer/status" style={{ color: '#007bff', textDecoration: 'underline', fontWeight: 'bold' }}>
+          🔍 ตรวจสอบสถานะการสมัคร
+        </a>
+      </div>
+
       {message.text && (
         <div style={{ 
           padding: '1rem', 
@@ -57,7 +109,7 @@ export default function ApplicationForm({ districts }: { districts: any[] }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem' }}>เลขทะเบียนสมาชิก 5 หลัก <span style={{color: 'red'}}>*</span></label>
-            <input type="text" name="memberId" required pattern="\d{5}" title="โปรดกรอกตัวเลข 5 หลัก" style={{ width: '100%', padding: '0.75rem', border: '1px solid #ccc', borderRadius: '4px' }} placeholder="ตัวอย่าง 12345" />
+            <input type="text" name="memberId" required maxLength={5} pattern="\d{5}" title="โปรดกรอกตัวเลข 5 หลัก" style={{ width: '100%', padding: '0.75rem', border: '1px solid #ccc', borderRadius: '4px' }} placeholder="ตัวอย่าง 12345" />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem' }}>เลขประจำตัวประชาชน 13 หลัก <span style={{color: 'red'}}>*</span></label>
@@ -131,9 +183,19 @@ export default function ApplicationForm({ districts }: { districts: any[] }) {
         </div>
 
         <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>อัปโหลดรูปประจำตัว (Profile Picture)</label>
-          <input type="file" name="image" accept="image/*" style={{ width: '100%', padding: '0.5rem' }} />
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+            อัปโหลดรูปถ่ายหน้าตรง {requireFiles && <span style={{color: 'red'}}>*</span>}
+          </label>
+          <input type="file" name="image" accept="image/*" required={requireFiles} style={{ width: '100%', padding: '0.5rem' }} />
           <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>* รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</p>
+        </div>
+
+        <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+            สำเนาทะเบียนบ้าน พร้อมรับรองสำเนาถูกต้อง {requireFiles && <span style={{color: 'red'}}>*</span>}
+          </label>
+          <input type="file" name="houseRegImage" accept="image/*,.pdf" required={requireFiles} style={{ width: '100%', padding: '0.5rem' }} />
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>* รองรับไฟล์รูปภาพและ PDF</p>
         </div>
         
         <div style={{ marginTop: '1rem' }}>

@@ -15,16 +15,29 @@ export const metadata: Metadata = {
 };
 
 import Navbar from "@/components/Navbar";
+import { prisma } from "@/lib/prisma";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const menuSettings = await prisma.setting.findMany({
+    where: {
+      key: {
+        startsWith: 'menu_'
+      }
+    }
+  });
+  const menuConfig = menuSettings.reduce((acc, curr) => {
+    acc[curr.key] = curr.value === 'true';
+    return acc;
+  }, {} as Record<string, boolean>);
+
   return (
     <html lang="th">
       <body className={prompt.className}>
-        <Navbar />
+        <Navbar menuConfig={menuConfig} />
         <main>{children}</main>
         <footer className="footer" style={{ padding: '2rem 1.5rem', background: 'var(--primary-color)', color: '#f8fafc', borderTop: '4px solid var(--secondary-color)' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>

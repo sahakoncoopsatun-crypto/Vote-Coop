@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function Navbar() {
+export default function Navbar({ menuConfig = {} }: { menuConfig?: Record<string, boolean> }) {
   const pathname = usePathname();
 
   // ไม่แสดง Navbar ในหน้าแอดมิน
@@ -12,13 +12,13 @@ export default function Navbar() {
   }
 
   const links = [
-    { href: '/', label: 'หน้าแรก' },
-    { href: '/check-eligibility', label: 'ตรวจสอบสิทธิ' },
-    { href: '/candidates', label: 'ทำเนียบผู้สมัคร' },
-    { href: '/results', label: 'ผลการเลือกตั้ง' },
-    { href: '/apply-candidate', label: 'สมัครรับเลือกตั้ง' },
-    { href: '/apply-officer', label: 'สมัครเจ้าหน้าที่' },
-    { href: '/admin', label: 'ระบบหลังบ้าน (Admin)' },
+    { href: '/', label: 'หน้าแรก', key: 'home' },
+    { href: '/check-eligibility', label: 'ตรวจสอบสิทธิ', key: 'check-eligibility' },
+    { href: '/candidates', label: 'ทำเนียบผู้สมัคร', key: 'candidates' },
+    { href: '/results', label: 'ผลการเลือกตั้ง', key: 'results' },
+    { href: '/apply-candidate', label: 'สมัครรับเลือกตั้ง', key: 'apply-candidate' },
+    { href: '/apply-officer', label: 'รับสมัครเจ้าหน้าที่ กกต.', key: 'apply-officer' },
+    { href: '/admin', label: 'ระบบหลังบ้าน (Admin)', key: 'admin' },
   ];
 
   return (
@@ -39,10 +39,18 @@ export default function Navbar() {
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           {links.map(link => {
             const isActive = pathname === link.href;
+            
+            // Check if this menu is disabled in settings (default true if not set)
+            // 'menu_admin' or 'menu_home' might not exist, so default is true
+            const settingKey = `menu_${link.key}`;
+            const isEnabled = menuConfig[settingKey] !== false; // if it's undefined, we treat it as enabled
+            
+            const targetHref = isEnabled ? link.href : '/maintenance';
+
             return (
               <Link 
                 key={link.href} 
-                href={link.href}
+                href={targetHref}
                 style={{
                   color: 'white',
                   textDecoration: 'none',

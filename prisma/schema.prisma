@@ -93,6 +93,7 @@ model OfficerApplication {
   province     String?  // จังหวัด
   zipcode      String?  // รหัสไปรษณีย์
   imageUrl     String?  // รูปประจำตัว
+  houseRegUrl  String?  // สำเนาทะเบียนบ้าน
 
   districtId Int
   district   District @relation(fields: [districtId], references: [id])

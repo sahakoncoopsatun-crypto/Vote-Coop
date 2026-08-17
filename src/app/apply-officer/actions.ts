@@ -29,15 +29,35 @@ export async function submitApplication(formData: FormData) {
     return { success: false, message: 'คุณได้ส่งใบสมัครสำหรับอำเภอนี้ไปแล้ว และอยู่ในระหว่างดำเนินการหรือได้รับการอนุมัติแล้ว' };
   }
 
+  const settings = await prisma.setting.findMany({
+    where: { key: 'require_officer_files' }
+  });
+  const requireFiles = settings.find(s => s.key === 'require_officer_files')?.value !== 'false';
+
   let imageUrl: string | undefined = undefined;
   const image = formData.get('image') as File | null;
   if (image && image.size > 0) {
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const fileName = `officer_app_${Date.now()}_${image.name.replace(/\s+/g, '_')}`;
+    const fileName = `officer_img_${Date.now()}_${image.name.replace(/\s+/g, '_')}`;
     const filePath = join(process.cwd(), 'public', 'uploads', fileName);
     await writeFile(filePath, buffer);
     imageUrl = `/uploads/${fileName}`;
+  } else if (requireFiles) {
+    return { success: false, message: 'กรุณาอัปโหลดรูปถ่ายหน้าตรง' };
+  }
+
+  let houseRegUrl: string | undefined = undefined;
+  const houseRegImage = formData.get('houseRegImage') as File | null;
+  if (houseRegImage && houseRegImage.size > 0) {
+    const bytes = await houseRegImage.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const fileName = `officer_housereg_${Date.now()}_${houseRegImage.name.replace(/\s+/g, '_')}`;
+    const filePath = join(process.cwd(), 'public', 'uploads', fileName);
+    await writeFile(filePath, buffer);
+    houseRegUrl = `/uploads/${fileName}`;
+  } else if (requireFiles) {
+    return { success: false, message: 'กรุณาอัปโหลดสำเนาทะเบียนบ้าน' };
   }
 
   const jobTitle = formData.get('jobTitle') as string;
@@ -69,7 +89,8 @@ export async function submitApplication(formData: FormData) {
       districtName,
       province,
       zipcode,
-      imageUrl
+      imageUrl,
+      houseRegUrl
     }
   });
 

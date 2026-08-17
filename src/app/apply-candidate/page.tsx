@@ -1,8 +1,22 @@
+import { prisma } from '@/lib/prisma';
 import CandidateApplicationForm from './CandidateApplicationForm';
 
 export const dynamic = 'force-dynamic';
 
-export default function ApplyCandidatePage() {
+export default async function ApplyCandidatePage() {
+  const settings = await prisma.setting.findMany({
+    where: { 
+      key: { 
+        in: ['candidate_terms', 'candidate_online_open', 'candidate_download_open', 'candidate_form_url'] 
+      } 
+    }
+  });
+  
+  const settingsMap = settings.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as any);
+
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1rem' }}>
       <h1 style={{ textAlign: 'center', marginBottom: '1rem', color: '#007bff' }}>
@@ -46,7 +60,12 @@ export default function ApplyCandidatePage() {
         </a>
       </div>
 
-      <CandidateApplicationForm />
+      <CandidateApplicationForm 
+        terms={settingsMap.candidate_terms || ''}
+        onlineOpen={settingsMap.candidate_online_open !== 'false'}
+        downloadOpen={settingsMap.candidate_download_open === 'true'}
+        formUrl={settingsMap.candidate_form_url || ''}
+      />
     </div>
   );
 }

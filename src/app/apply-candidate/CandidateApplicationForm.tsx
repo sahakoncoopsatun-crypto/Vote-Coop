@@ -3,13 +3,31 @@
 import { useState } from 'react';
 import { submitCandidateApplication } from './actions';
 
-export default function CandidateApplicationForm() {
+export default function CandidateApplicationForm({ 
+  terms, 
+  onlineOpen, 
+  downloadOpen, 
+  formUrl 
+}: { 
+  terms: string, 
+  onlineOpen: boolean, 
+  downloadOpen: boolean, 
+  formUrl: string 
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [applicationId, setApplicationId] = useState<number | null>(null);
+  
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(!!terms); // Only show terms if there are terms configured
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (terms && !acceptedTerms) {
+      alert('กรุณายอมรับเงื่อนไขการรับสมัครก่อน');
+      return;
+    }
+
     setIsSubmitting(true);
     setMessage({ type: '', text: '' });
     
@@ -27,6 +45,47 @@ export default function CandidateApplicationForm() {
     }
     setIsSubmitting(false);
   };
+
+  if (showTerms) {
+    return (
+      <div className="glass-panel animate-fade-in" style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto', padding: '2rem' }}>
+        <h3 style={{ marginBottom: '1.5rem', color: '#007bff' }}>เงื่อนไขการรับสมัคร</h3>
+        <div style={{ 
+          background: '#f8f9fa', 
+          padding: '1.5rem', 
+          borderRadius: '8px', 
+          textAlign: 'left', 
+          marginBottom: '2rem',
+          minHeight: '150px',
+          whiteSpace: 'pre-wrap',
+          border: '1px solid #e9ecef',
+          color: '#333'
+        }}>
+          {terms}
+        </div>
+        
+        <button 
+          onClick={() => {
+            setAcceptedTerms(true);
+            setShowTerms(false);
+          }}
+          className="btn"
+          style={{
+            padding: '1rem 2rem',
+            background: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            cursor: 'pointer'
+          }}
+        >
+          ฉันได้อ่านและยอมรับเงื่อนไข
+        </button>
+      </div>
+    );
+  }
 
   if (applicationId) {
     return (
@@ -49,6 +108,18 @@ export default function CandidateApplicationForm() {
     );
   }
 
+  if (!onlineOpen && !downloadOpen) {
+    return (
+      <div className="glass-panel animate-fade-in" style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto', padding: '4rem 2rem' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>⛔</div>
+        <h2 style={{ color: 'var(--primary-color)', marginBottom: '1rem', fontSize: '2rem' }}>ขณะนี้ระบบปิดรับสมัครแล้ว</h2>
+        <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
+          หมดเขตการรับสมัครคณะกรรมการตามเวลาที่กำหนด หรือระบบอยู่ระหว่างการปรับปรุง
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-in" style={{ maxWidth: '900px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -56,9 +127,34 @@ export default function CandidateApplicationForm() {
         <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>สหกรณ์ออมทรัพย์สาธารณสุขสตูล จำกัด</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="glass-panel" style={{ background: '#ffffff', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', borderRadius: '16px', padding: '3rem' }}>
-        
-        {message.text && (
+      {downloadOpen && (
+        <div className="glass-panel" style={{ background: '#f0f9ff', border: '1px solid #bae6fd', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', borderRadius: '12px', padding: '2rem', marginBottom: '2rem', textAlign: 'center' }}>
+          <h3 style={{ color: '#0369a1', marginBottom: '1rem' }}>สำหรับผู้ประสงค์ยื่นใบสมัครด้วยตนเอง</h3>
+          <p style={{ color: '#0c4a6e', marginBottom: '1.5rem' }}>ท่านสามารถดาวน์โหลดแบบฟอร์มใบสมัครเพื่อนำไปเขียนด้วยตนเอง และนำส่งที่สหกรณ์ฯ</p>
+          {formUrl ? (
+            <a 
+              href={formUrl} 
+              target="_blank" 
+              rel="noreferrer"
+              className="btn"
+              style={{ fontSize: '1.1rem', padding: '0.8rem 2rem', borderRadius: '50px', background: '#0284c7', color: 'white', display: 'inline-block', textDecoration: 'none' }}
+            >
+              📥 ดาวน์โหลดแบบฟอร์มใบสมัคร
+            </a>
+          ) : (
+            <p style={{ color: '#dc2626' }}>ยังไม่มีไฟล์ใบสมัครในระบบ</p>
+          )}
+        </div>
+      )}
+
+      {onlineOpen && (
+        <form onSubmit={handleSubmit} className="glass-panel" style={{ background: '#ffffff', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', borderRadius: '16px', padding: '3rem' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h3 style={{ color: 'var(--primary-color)', borderBottom: '2px solid #f3e5f5', paddingBottom: '0.5rem', display: 'inline-block' }}>แบบฟอร์มสมัครออนไลน์</h3>
+          </div>
+
+          {message.text && (
           <div style={{ 
             padding: '1rem 1.5rem', 
             marginBottom: '2rem', 
@@ -257,21 +353,22 @@ export default function CandidateApplicationForm() {
           </div>
         </div>
 
-        <div style={{ textAlign: 'center' }}>
-          <button type="submit" disabled={isSubmitting} className="btn" style={{ 
-            width: '100%', 
-            maxWidth: '400px',
-            padding: '1rem', 
-            borderRadius: '50px', 
-            fontSize: '1.2rem',
-            boxShadow: '0 8px 15px rgba(123, 31, 162, 0.4)',
-            cursor: isSubmitting ? 'not-allowed' : 'pointer',
-            opacity: isSubmitting ? 0.7 : 1
-          }}>
-            {isSubmitting ? 'กำลังประมวลผลข้อมูล...' : 'ส่งใบสมัครรับเลือกตั้ง 🚀'}
-          </button>
-        </div>
-      </form>
+          <div style={{ textAlign: 'center' }}>
+            <button type="submit" disabled={isSubmitting} className="btn" style={{ 
+              width: '100%', 
+              maxWidth: '400px',
+              padding: '1rem', 
+              borderRadius: '50px', 
+              fontSize: '1.2rem',
+              boxShadow: '0 8px 15px rgba(123, 31, 162, 0.4)',
+              cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              opacity: isSubmitting ? 0.7 : 1
+            }}>
+              {isSubmitting ? 'กำลังประมวลผลข้อมูล...' : 'ส่งใบสมัครรับเลือกตั้ง 🚀'}
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }

@@ -55,7 +55,7 @@ export default function CheckEligibilityPage() {
       <div className="glass-panel mb-8" style={{ padding: '2.5rem' }}>
         <form onSubmit={handleCheck}>
           <div className="form-group">
-            <label htmlFor="memberId" style={{ color: 'var(--primary-color)' }}>เลขทะเบียนสมาชิก (5 หรือ 6 หลัก)</label>
+            <label htmlFor="memberId" style={{ color: 'var(--primary-color)' }}>เลขทะเบียนสมาชิก (5 หลัก)</label>
             <input 
               type="text" 
               id="memberId" 
@@ -63,6 +63,7 @@ export default function CheckEligibilityPage() {
               value={memberId} 
               onChange={(e) => setMemberId(e.target.value)}
               placeholder="เช่น 12345"
+              maxLength={5}
               required
             />
           </div>

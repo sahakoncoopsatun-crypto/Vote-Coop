@@ -10,6 +10,14 @@ export default async function ApplyOfficerPage() {
     }
   });
 
+  const settings = await prisma.setting.findMany({
+    where: { key: { in: ['officer_terms', 'require_officer_files'] } }
+  });
+  const settingsMap = settings.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as any);
+
   const districtsWithStats = districts.map(d => {
     const approvedCount = d.applications.filter(a => a.status === 'approved').length;
     return {
@@ -69,7 +77,11 @@ export default async function ApplyOfficerPage() {
       </div>
 
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <ApplicationForm districts={districtsWithStats} />
+        <ApplicationForm 
+          districts={districtsWithStats} 
+          terms={settingsMap.officer_terms || ''}
+          requireFiles={settingsMap.require_officer_files !== 'false'}
+        />
       </div>
     </div>
   );

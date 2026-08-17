@@ -3,17 +3,30 @@ import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
 export async function GET(request: Request) {
+  const keys = [
+    'homepage_title', 
+    'homepage_subtitle', 
+    'countdown_target', 
+    'election_date', 
+    'election_time', 
+    'election_location',
+    'menu_check-eligibility',
+    'menu_candidates',
+    'menu_results',
+    'menu_apply-candidate',
+    'menu_apply-officer',
+    'require_officer_files',
+    'officer_terms',
+    'candidate_terms',
+    'candidate_online_open',
+    'candidate_download_open',
+    'candidate_form_url'
+  ];
+
   const settings = await prisma.setting.findMany({
     where: {
       key: {
-        in: [
-          'homepage_title', 
-          'homepage_subtitle', 
-          'countdown_target', 
-          'election_date', 
-          'election_time', 
-          'election_location'
-        ]
+        in: keys
       }
     }
   });
@@ -41,7 +54,18 @@ export async function POST(request: Request) {
     'countdown_target', 
     'election_date', 
     'election_time', 
-    'election_location'
+    'election_location',
+    'menu_check-eligibility',
+    'menu_candidates',
+    'menu_results',
+    'menu_apply-candidate',
+    'menu_apply-officer',
+    'require_officer_files',
+    'officer_terms',
+    'candidate_terms',
+    'candidate_online_open',
+    'candidate_download_open',
+    'candidate_form_url'
   ];
 
   for (const key of keysToUpdate) {
