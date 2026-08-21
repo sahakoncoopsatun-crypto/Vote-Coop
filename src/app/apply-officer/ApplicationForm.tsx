@@ -20,6 +20,21 @@ export default function ApplicationForm({ districts, terms, requireFiles }: { di
     setMessage({ type: '', text: '' });
     
     const formData = new FormData(e.currentTarget);
+    
+    // Check file sizes
+    const image = formData.get('image') as File | null;
+    const houseReg = formData.get('houseRegImage') as File | null;
+    if (image && image.size > 2 * 1024 * 1024) {
+      alert('ขนาดไฟล์รูปถ่ายต้องไม่เกิน 2MB');
+      setIsSubmitting(false);
+      return;
+    }
+    if (houseReg && houseReg.size > 2 * 1024 * 1024) {
+      alert('ขนาดไฟล์สำเนาทะเบียนบ้านต้องไม่เกิน 2MB');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const res = await submitApplication(formData);
       if (res.success) {

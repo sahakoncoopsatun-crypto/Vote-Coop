@@ -23,20 +23,16 @@ export async function saveAgenda(formData: FormData) {
   if (image && image.size > 0) {
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const fileName = `agenda_${Date.now()}_${image.name}`;
-    const filePath = join(process.cwd(), 'public', 'uploads', fileName);
-    await writeFile(filePath, buffer);
-    imageUrl = `/uploads/${fileName}`;
+    const base64 = buffer.toString('base64');
+    imageUrl = `data:${image.type};base64,${base64}`;
   }
 
   const document = formData.get('document') as File | null;
   if (document && document.size > 0) {
     const bytes = await document.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const fileName = `agenda_doc_${Date.now()}_${document.name}`;
-    const filePath = join(process.cwd(), 'public', 'uploads', fileName);
-    await writeFile(filePath, buffer);
-    fileUrl = `/uploads/${fileName}`;
+    const base64 = buffer.toString('base64');
+    fileUrl = `data:${document.type};base64,${base64}`;
   }
   
   const data: any = { number, title, description, result, approveVotes, disapproveVotes };

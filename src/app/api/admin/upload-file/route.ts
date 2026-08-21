@@ -21,13 +21,8 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     
-    // Clean file name to avoid issues
-    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const fileName = `admin_upload_${Date.now()}_${safeName}`;
-    const filePath = join(process.cwd(), 'public', 'uploads', fileName);
-    
-    await writeFile(filePath, buffer);
-    const fileUrl = `/uploads/${fileName}`;
+    const base64 = buffer.toString('base64');
+    const fileUrl = `data:${file.type};base64,${base64}`;
 
     return NextResponse.json({ success: true, url: fileUrl });
   } catch (error) {

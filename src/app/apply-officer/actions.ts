@@ -39,10 +39,8 @@ export async function submitApplication(formData: FormData) {
   if (image && image.size > 0) {
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const fileName = `officer_img_${Date.now()}_${image.name.replace(/\s+/g, '_')}`;
-    const filePath = join(process.cwd(), 'public', 'uploads', fileName);
-    await writeFile(filePath, buffer);
-    imageUrl = `/uploads/${fileName}`;
+    const base64 = buffer.toString('base64');
+    imageUrl = `data:${image.type};base64,${base64}`;
   } else if (requireFiles) {
     return { success: false, message: 'กรุณาอัปโหลดรูปถ่ายหน้าตรง' };
   }
@@ -52,10 +50,8 @@ export async function submitApplication(formData: FormData) {
   if (houseRegImage && houseRegImage.size > 0) {
     const bytes = await houseRegImage.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const fileName = `officer_housereg_${Date.now()}_${houseRegImage.name.replace(/\s+/g, '_')}`;
-    const filePath = join(process.cwd(), 'public', 'uploads', fileName);
-    await writeFile(filePath, buffer);
-    houseRegUrl = `/uploads/${fileName}`;
+    const base64 = buffer.toString('base64');
+    houseRegUrl = `data:${houseRegImage.type};base64,${base64}`;
   } else if (requireFiles) {
     return { success: false, message: 'กรุณาอัปโหลดสำเนาทะเบียนบ้าน' };
   }

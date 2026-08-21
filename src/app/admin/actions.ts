@@ -38,12 +38,8 @@ export async function saveCandidate(formData: FormData) {
   if (file && file.size > 0) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    
-    // Save locally
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-    const path = join(process.cwd(), 'public/uploads', filename);
-    await writeFile(path, buffer);
-    imageUrl = `/uploads/${filename}`;
+    const base64 = buffer.toString('base64');
+    imageUrl = `data:${file.type};base64,${base64}`;
   }
 
   const data = {
@@ -102,19 +98,15 @@ export async function saveNews(formData: FormData) {
   if (image && image.size > 0) {
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const filename = `${Date.now()}-${image.name.replace(/\s+/g, '_')}`;
-    const path = join(process.cwd(), 'public/uploads', filename);
-    await writeFile(path, buffer);
-    imageUrl = `/uploads/${filename}`;
+    const base64 = buffer.toString('base64');
+    imageUrl = `data:${image.type};base64,${base64}`;
   }
 
   if (file && file.size > 0) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-    const path = join(process.cwd(), 'public/uploads', filename);
-    await writeFile(path, buffer);
-    fileUrl = `/uploads/${filename}`;
+    const base64 = buffer.toString('base64');
+    fileUrl = `data:${file.type};base64,${base64}`;
   }
 
   const data = {

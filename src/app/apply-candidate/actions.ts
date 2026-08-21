@@ -36,10 +36,8 @@ export async function submitCandidateApplication(formData: FormData) {
   if (image && image.size > 0) {
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const fileName = `candidate_app_${Date.now()}_${image.name.replace(/\s+/g, '_')}`;
-    const filePath = join(process.cwd(), 'public', 'uploads', fileName);
-    await writeFile(filePath, buffer);
-    imageUrl = `/uploads/${fileName}`;
+    const base64 = buffer.toString('base64');
+    imageUrl = `data:${image.type};base64,${base64}`;
   }
 
   const age = formData.get('age') as string;
