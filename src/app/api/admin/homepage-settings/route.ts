@@ -20,7 +20,15 @@ export async function GET(request: Request) {
     'candidate_terms',
     'candidate_online_open',
     'candidate_download_open',
-    'candidate_form_url'
+    'candidate_form_url',
+    'candidate_open_president',
+    'candidate_open_committee_hospital',
+    'candidate_open_committee_sso',
+    'candidate_open_auditor',
+    'candidate_form_president',
+    'candidate_form_committee_hospital',
+    'candidate_form_committee_sso',
+    'candidate_form_auditor'
   ];
 
   const settings = await prisma.setting.findMany({
@@ -65,7 +73,15 @@ export async function POST(request: Request) {
     'candidate_terms',
     'candidate_online_open',
     'candidate_download_open',
-    'candidate_form_url'
+    'candidate_form_url',
+    'candidate_open_president',
+    'candidate_open_committee_hospital',
+    'candidate_open_committee_sso',
+    'candidate_open_auditor',
+    'candidate_form_president',
+    'candidate_form_committee_hospital',
+    'candidate_form_committee_sso',
+    'candidate_form_auditor'
   ];
 
   for (const key of keysToUpdate) {

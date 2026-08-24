@@ -7,12 +7,14 @@ export default function CandidateApplicationForm({
   terms, 
   onlineOpen, 
   downloadOpen, 
-  formUrl 
+  positionSettings 
 }: { 
   terms: string, 
   onlineOpen: boolean, 
   downloadOpen: boolean, 
-  formUrl: string 
+  positionSettings: {
+    [key: string]: { open: boolean, url: string }
+  }
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -140,19 +142,34 @@ export default function CandidateApplicationForm({
         <div className="glass-panel" style={{ background: '#f0f9ff', border: '1px solid #bae6fd', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', borderRadius: '12px', padding: '2rem', marginBottom: '2rem', textAlign: 'center' }}>
           <h3 style={{ color: '#0369a1', marginBottom: '1rem' }}>สำหรับผู้ประสงค์ยื่นใบสมัครด้วยตนเอง</h3>
           <p style={{ color: '#0c4a6e', marginBottom: '1.5rem' }}>ท่านสามารถดาวน์โหลดแบบฟอร์มใบสมัครเพื่อนำไปเขียนด้วยตนเอง และนำส่งที่สหกรณ์ฯ</p>
-          {formUrl ? (
-            <a 
-              href={formUrl} 
-              target="_blank" 
-              rel="noreferrer"
-              className="btn"
-              style={{ fontSize: '1.1rem', padding: '0.8rem 2rem', borderRadius: '50px', background: '#0284c7', color: 'white', display: 'inline-block', textDecoration: 'none' }}
-            >
-              📥 ดาวน์โหลดแบบฟอร์มใบสมัคร
-            </a>
-          ) : (
-            <p style={{ color: '#dc2626' }}>ยังไม่มีไฟล์ใบสมัครในระบบ</p>
-          )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', alignItems: 'center' }}>
+            {[
+              { id: 'president', label: 'ประธานกรรมการ' },
+              { id: 'committee_hospital', label: 'กรรมการ รพ.สตูล' },
+              { id: 'committee_sso', label: 'กรรมการ สสอ.' },
+              { id: 'auditor', label: 'ผู้ตรวจสอบกิจการ' }
+            ].map(pos => {
+              const posData = positionSettings[pos.id];
+              if (!posData || !posData.open || !posData.url) return null;
+              
+              return (
+                <a 
+                  key={pos.id}
+                  href={posData.url} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="btn"
+                  style={{ fontSize: '1rem', padding: '0.6rem 1.5rem', borderRadius: '50px', background: '#0284c7', color: 'white', display: 'inline-block', textDecoration: 'none' }}
+                >
+                  📥 ดาวน์โหลดใบสมัคร {pos.label}
+                </a>
+              );
+            })}
+            
+            {(!positionSettings.president?.url && !positionSettings.committee_hospital?.url && !positionSettings.committee_sso?.url && !positionSettings.auditor?.url) && (
+              <p style={{ color: '#dc2626' }}>ยังไม่มีไฟล์ใบสมัครในระบบ</p>
+            )}
+          </div>
         </div>
       )}
 
@@ -186,10 +203,10 @@ export default function CandidateApplicationForm({
             <label>ตำแหน่งที่ประสงค์จะลงสมัคร <span className="text-danger">*</span></label>
             <select name="position" required className="form-control" style={{ padding: '1rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
               <option value="">-- เลือกตำแหน่ง --</option>
-              <option value="ประธานกรรมการ">ประธานกรรมการ</option>
-              <option value="กรรมการ รพ.สตูล">กรรมการ รพ.สตูล</option>
-              <option value="กรรมการ สสอ.">กรรมการ สสอ.</option>
-              <option value="ผู้ตรวจสอบกิจการ">ผู้ตรวจสอบกิจการ</option>
+              {positionSettings?.president?.open && <option value="ประธานกรรมการ">ประธานกรรมการ</option>}
+              {positionSettings?.committee_hospital?.open && <option value="กรรมการ รพ.สตูล">กรรมการ รพ.สตูล</option>}
+              {positionSettings?.committee_sso?.open && <option value="กรรมการ สสอ.">กรรมการ สสอ.</option>}
+              {positionSettings?.auditor?.open && <option value="ผู้ตรวจสอบกิจการ">ผู้ตรวจสอบกิจการ</option>}
             </select>
           </div>
         </div>

@@ -23,7 +23,15 @@ export default function HomepageSettingsPage() {
     candidate_terms: '',
     candidate_online_open: 'true',
     candidate_download_open: 'false',
-    candidate_form_url: ''
+    candidate_form_url: '',
+    candidate_open_president: 'true',
+    candidate_open_committee_hospital: 'true',
+    candidate_open_committee_sso: 'true',
+    candidate_open_auditor: 'true',
+    candidate_form_president: '',
+    candidate_form_committee_hospital: '',
+    candidate_form_committee_sso: '',
+    candidate_form_auditor: ''
   });
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -42,7 +50,7 @@ export default function HomepageSettingsPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, formKey: string) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -58,7 +66,7 @@ export default function HomepageSettingsPage() {
       const data = await res.json();
       
       if (res.ok && data.success) {
-        setForm({ ...form, candidate_form_url: data.url });
+        setForm({ ...form, [formKey]: data.url });
         Swal.fire({ icon: 'success', title: 'อัปโหลดสำเร็จ', text: 'อัปโหลดไฟล์ใบสมัครเรียบร้อยแล้ว กรุณากดบันทึกข้อมูลหน้าแรก' });
       } else {
         throw new Error(data.error || 'Upload failed');
@@ -273,24 +281,46 @@ export default function HomepageSettingsPage() {
             </div>
           </div>
           
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.4rem' }}>อัปโหลดไฟล์ใบสมัครรับเลือกตั้ง (PDF/Word)</label>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <input 
-                type="file" 
-                accept=".pdf,.doc,.docx" 
-                onChange={handleFileUpload} 
-                disabled={uploading}
-                style={{ padding: '0.4rem', border: '1px solid #ced4da', borderRadius: '4px', flex: 1, background: 'white' }}
-              />
-              {uploading && <span style={{ color: '#007bff' }}>กำลังอัปโหลด...</span>}
+          <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: '#495057' }}>เปิด/ปิด รับสมัครรายตำแหน่ง และอัปโหลดไฟล์</h4>
+          
+          {[
+            { id: 'president', label: 'ประธานกรรมการ' },
+            { id: 'committee_hospital', label: 'กรรมการ รพ.สตูล' },
+            { id: 'committee_sso', label: 'กรรมการ สสอ.' },
+            { id: 'auditor', label: 'ผู้ตรวจสอบกิจการ' }
+          ].map(pos => (
+            <div key={pos.id} style={{ marginBottom: '1.5rem', padding: '1rem', border: '1px solid #dee2e6', borderRadius: '6px', background: 'white' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <strong style={{ fontSize: '1.1rem', color: '#007bff' }}>{pos.label}</strong>
+                <select 
+                  name={`candidate_open_${pos.id}`} 
+                  value={form[`candidate_open_${pos.id}` as keyof typeof form] || 'true'} 
+                  onChange={handleChange} 
+                  style={{ padding: '0.4rem', borderRadius: '4px', border: '1px solid #ced4da' }}
+                >
+                  <option value="true">🟢 เปิดรับสมัคร</option>
+                  <option value="false">🔴 ปิดรับสมัคร</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.9rem' }}>อัปโหลดไฟล์ใบสมัคร (PDF/Word)</label>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <input 
+                    type="file" 
+                    accept=".pdf,.doc,.docx" 
+                    onChange={(e) => handleFileUpload(e, `candidate_form_${pos.id}`)} 
+                    disabled={uploading}
+                    style={{ padding: '0.4rem', border: '1px solid #ced4da', borderRadius: '4px', flex: 1 }}
+                  />
+                </div>
+                {form[`candidate_form_${pos.id}` as keyof typeof form] && (
+                  <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#28a745', marginBottom: 0 }}>
+                    ✅ มีไฟล์ในระบบแล้ว: <a href={form[`candidate_form_${pos.id}` as keyof typeof form] as string} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline' }}>ดูไฟล์ปัจจุบัน</a>
+                  </p>
+                )}
+              </div>
             </div>
-            {form.candidate_form_url && (
-              <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#28a745' }}>
-                ✅ มีไฟล์ในระบบแล้ว: <a href={form.candidate_form_url} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline' }}>ดูไฟล์ปัจจุบัน</a>
-              </p>
-            )}
-          </div>
+          ))}
           
           <div>
             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.4rem' }}>เงื่อนไขการรับสมัคร (Terms & Conditions)</label>

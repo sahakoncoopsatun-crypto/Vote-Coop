@@ -7,7 +7,13 @@ export default async function ApplyCandidatePage() {
   const settings = await prisma.setting.findMany({
     where: { 
       key: { 
-        in: ['candidate_terms', 'candidate_online_open', 'candidate_download_open', 'candidate_form_url'] 
+        in: [
+          'candidate_terms', 'candidate_online_open', 'candidate_download_open', 
+          'candidate_open_president', 'candidate_open_committee_hospital', 
+          'candidate_open_committee_sso', 'candidate_open_auditor',
+          'candidate_form_president', 'candidate_form_committee_hospital', 
+          'candidate_form_committee_sso', 'candidate_form_auditor'
+        ] 
       } 
     }
   });
@@ -64,7 +70,12 @@ export default async function ApplyCandidatePage() {
         terms={settingsMap.candidate_terms || ''}
         onlineOpen={settingsMap.candidate_online_open !== 'false'}
         downloadOpen={settingsMap.candidate_download_open === 'true'}
-        formUrl={settingsMap.candidate_form_url || ''}
+        positionSettings={{
+          president: { open: settingsMap.candidate_open_president !== 'false', url: settingsMap.candidate_form_president || '' },
+          committee_hospital: { open: settingsMap.candidate_open_committee_hospital !== 'false', url: settingsMap.candidate_form_committee_hospital || '' },
+          committee_sso: { open: settingsMap.candidate_open_committee_sso !== 'false', url: settingsMap.candidate_form_committee_sso || '' },
+          auditor: { open: settingsMap.candidate_open_auditor !== 'false', url: settingsMap.candidate_form_auditor || '' },
+        }}
       />
     </div>
   );
