@@ -36,7 +36,7 @@ export default async function AdminNews() {
                     <img src={item.imageUrl} alt="News Image" style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
                   )}
                   {item.fileUrl && (
-                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ padding: '0.25rem 0.5rem', background: '#e9ecef', borderRadius: '4px', fontSize: '0.8rem', textDecoration: 'none', color: '#333' }}>📎 ไฟล์</a>
+                    <a href={item.fileUrl} download="�͡���" style={{ padding: '0.25rem 0.5rem', background: '#e9ecef', borderRadius: '4px', fontSize: '0.8rem', textDecoration: 'none', color: '#333' }}>📎 ไฟล์</a>
                   )}
                 </div>
               </td>
