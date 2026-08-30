@@ -124,13 +124,7 @@ export default function CheckEligibilityPage() {
                     วันที่ 21 พฤศจิกายน 2569 เวลา 08.30 น. เป็นต้นไป ณ หอประชุม 100 ปี โรงเรียนสตูลวิทยา
                   </td>
                 </tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '0.75rem 0', color: 'var(--text-light)' }}>ลำดับที่ในบัญชีรายชื่อ</td>
-                  <td style={{ padding: '0.75rem 0', fontWeight: 'bold' }}>
-                    ลำดับที่ {result.sequenceNumber || '-'} 
-                    {result.registrationDesk && <span style={{ marginLeft: '10px', color: 'var(--secondary-color)' }}>(โต๊ะลงทะเบียนที่ {result.registrationDesk})</span>}
-                  </td>
-                </tr>
+
               </tbody>
             </table>
             

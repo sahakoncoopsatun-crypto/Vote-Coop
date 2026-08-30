@@ -125,7 +125,7 @@ export default function CandidateApplicationForm({
         <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>⛔</div>
         <h2 style={{ color: 'var(--primary-color)', marginBottom: '1rem', fontSize: '2rem' }}>ขณะนี้ระบบปิดรับสมัครแล้ว</h2>
         <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
-          หมดเขตการรับสมัครคณะกรรมการตามเวลาที่กำหนด หรือระบบอยู่ระหว่างการปรับปรุง
+          หมดเขตการรับสมัครตามเวลาที่กำหนด หรือระบบอยู่ระหว่างการปรับปรุง
         </p>
       </div>
     );
@@ -134,7 +134,7 @@ export default function CandidateApplicationForm({
   return (
     <div className="animate-fade-in" style={{ maxWidth: '900px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ color: 'var(--primary-color)', fontSize: '2.2rem', fontWeight: 'bold' }}>ใบสมัครรับเลือกตั้งคณะกรรมการ</h1>
+        <h1 style={{ color: 'var(--primary-color)', fontSize: '2.2rem', fontWeight: 'bold' }}>ใบสมัครรับเลือกตั้ง</h1>
         <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>สหกรณ์ออมทรัพย์สาธารณสุขสตูล จำกัด</p>
       </div>
 
