@@ -18,7 +18,8 @@ export default function HomepageSettingsPage() {
     menu_results: 'true',
     menu_apply_candidate: 'true',
     menu_apply_officer: 'true',
-    require_officer_files: 'true',
+    require_officer_photo: 'true',
+    require_officer_idcard: 'true',
     officer_terms: 'ข้าพเจ้าขอรับรองว่าข้อมูลที่กรอกทั้งหมดเป็นความจริง และยินยอมให้สหกรณ์ตรวจสอบข้อมูลส่วนบุคคลเพื่อประกอบการพิจารณา',
     candidate_terms: '',
     candidate_online_open: 'true',
@@ -240,12 +241,21 @@ export default function HomepageSettingsPage() {
           </div>
           
           <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: '#495057' }}>ตั้งค่าแบบฟอร์มเจ้าหน้าที่</h4>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.4rem' }}>บังคับแนบไฟล์รูปถ่ายและสำเนาทะเบียนบ้าน</label>
-            <select name="require_officer_files" value={form.require_officer_files || 'true'} onChange={handleChange} style={{ width: '100%', padding: '0.6rem', borderRadius: '6px', border: '1px solid #ced4da' }}>
-              <option value="true">🟢 บังคับ (ต้องแนบถึงจะส่งได้)</option>
-              <option value="false">⚪ ไม่บังคับ (ส่งฟอร์มได้โดยไม่ต้องแนบไฟล์)</option>
-            </select>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.4rem' }}>รูปถ่ายหน้าตรง</label>
+              <select name="require_officer_photo" value={form.require_officer_photo || 'true'} onChange={handleChange} style={{ width: '100%', padding: '0.6rem', borderRadius: '6px', border: '1px solid #ced4da' }}>
+                <option value="true">🟢 บังคับแนบไฟล์</option>
+                <option value="false">⚪ ไม่บังคับ</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.4rem' }}>สำเนาบัตรประชาชน</label>
+              <select name="require_officer_idcard" value={form.require_officer_idcard || 'true'} onChange={handleChange} style={{ width: '100%', padding: '0.6rem', borderRadius: '6px', border: '1px solid #ced4da' }}>
+                <option value="true">🟢 บังคับแนบไฟล์</option>
+                <option value="false">⚪ ไม่บังคับ</option>
+              </select>
+            </div>
           </div>
           
           <div>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { submitApplication } from './actions';
 
-export default function ApplicationForm({ districts, terms, requireFiles }: { districts: any[], terms: string, requireFiles: boolean }) {
+export default function ApplicationForm({ districts, terms, requirePhoto, requireIdCard }: { districts: any[], terms: string, requirePhoto: boolean, requireIdCard: boolean }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -30,7 +30,7 @@ export default function ApplicationForm({ districts, terms, requireFiles }: { di
       return;
     }
     if (houseReg && houseReg.size > 2 * 1024 * 1024) {
-      alert('ขนาดไฟล์สำเนาทะเบียนบ้านต้องไม่เกิน 2MB');
+      alert('ขนาดไฟล์สำเนาบัตรประชาชนต้องไม่เกิน 2MB');
       setIsSubmitting(false);
       return;
     }
@@ -199,18 +199,18 @@ export default function ApplicationForm({ districts, terms, requireFiles }: { di
 
         <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            อัปโหลดรูปถ่ายหน้าตรง {requireFiles && <span style={{color: 'red'}}>*</span>}
+            อัปโหลดรูปถ่ายหน้าตรง {requirePhoto && <span style={{color: 'red'}}>*</span>}
           </label>
-          <input type="file" name="image" accept="image/*" required={requireFiles} style={{ width: '100%', padding: '0.5rem' }} />
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>* รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</p>
+          <input type="file" name="image" accept="image/*" required={requirePhoto} style={{ width: '100%', padding: '0.5rem' }} />
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>* รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 2MB</p>
         </div>
 
         <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            สำเนาทะเบียนบ้าน พร้อมรับรองสำเนาถูกต้อง {requireFiles && <span style={{color: 'red'}}>*</span>}
+            สำเนาบัตรประชาชน พร้อมรับรองสำเนาถูกต้อง {requireIdCard && <span style={{color: 'red'}}>*</span>}
           </label>
-          <input type="file" name="houseRegImage" accept="image/*,.pdf" required={requireFiles} style={{ width: '100%', padding: '0.5rem' }} />
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>* รองรับไฟล์รูปภาพและ PDF</p>
+          <input type="file" name="houseRegImage" accept="image/*,.pdf" required={requireIdCard} style={{ width: '100%', padding: '0.5rem' }} />
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>* รองรับไฟล์รูปภาพและ PDF ขนาดไม่เกิน 2MB</p>
         </div>
         
         <div style={{ marginTop: '1rem' }}>

@@ -30,9 +30,10 @@ export async function submitApplication(formData: FormData) {
   }
 
   const settings = await prisma.setting.findMany({
-    where: { key: 'require_officer_files' }
+    where: { key: { in: ['require_officer_photo', 'require_officer_idcard'] } }
   });
-  const requireFiles = settings.find(s => s.key === 'require_officer_files')?.value !== 'false';
+  const requirePhoto = settings.find(s => s.key === 'require_officer_photo')?.value !== 'false';
+  const requireIdCard = settings.find(s => s.key === 'require_officer_idcard')?.value !== 'false';
 
   let imageUrl: string | undefined = undefined;
   const image = formData.get('image') as File | null;
@@ -41,7 +42,7 @@ export async function submitApplication(formData: FormData) {
     const buffer = Buffer.from(bytes);
     const base64 = buffer.toString('base64');
     imageUrl = `data:${image.type};base64,${base64}`;
-  } else if (requireFiles) {
+  } else if (requirePhoto) {
     return { success: false, message: 'กรุณาอัปโหลดรูปถ่ายหน้าตรง' };
   }
 
@@ -52,8 +53,8 @@ export async function submitApplication(formData: FormData) {
     const buffer = Buffer.from(bytes);
     const base64 = buffer.toString('base64');
     houseRegUrl = `data:${houseRegImage.type};base64,${base64}`;
-  } else if (requireFiles) {
-    return { success: false, message: 'กรุณาอัปโหลดสำเนาทะเบียนบ้าน' };
+  } else if (requireIdCard) {
+    return { success: false, message: 'กรุณาอัปโหลดสำเนาบัตรประชาชน' };
   }
 
   const jobTitle = formData.get('jobTitle') as string;

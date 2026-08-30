@@ -11,7 +11,7 @@ export default async function ApplyOfficerPage() {
   });
 
   const settings = await prisma.setting.findMany({
-    where: { key: { in: ['officer_terms', 'require_officer_files'] } }
+    where: { key: { in: ['officer_terms', 'require_officer_photo', 'require_officer_idcard'] } }
   });
   const settingsMap = settings.reduce((acc, curr) => {
     acc[curr.key] = curr.value;
@@ -80,7 +80,8 @@ export default async function ApplyOfficerPage() {
         <ApplicationForm 
           districts={districtsWithStats} 
           terms={settingsMap.officer_terms || ''}
-          requireFiles={settingsMap.require_officer_files !== 'false'}
+          requirePhoto={settingsMap.require_officer_photo !== 'false'}
+          requireIdCard={settingsMap.require_officer_idcard !== 'false'}
         />
       </div>
     </div>
