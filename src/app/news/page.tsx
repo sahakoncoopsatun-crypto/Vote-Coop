@@ -42,7 +42,7 @@ export default async function NewsPage() {
                         <iframe src={item.fileUrl} width="100%" height="100%" style={{ border: 'none' }} title="PDF Document" />
                       </div>
                     ) : (
-                      <a href={item.fileUrl} download="�͡��â������" style={{ display: 'inline-block', padding: '0.5rem 1rem', background: 'var(--primary-color)', color: 'white', textDecoration: 'none', borderRadius: '4px', fontWeight: 'bold' }}>
+                      <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', padding: '0.5rem 1rem', background: 'var(--primary-color)', color: 'white', textDecoration: 'none', borderRadius: '4px', fontWeight: 'bold' }}>
                         📎 ดาวน์โหลดไฟล์แนบ
                       </a>
                     )}

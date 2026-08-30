@@ -39,12 +39,12 @@ export default async function AdminAgendas() {
               <td style={{ padding: '1rem', fontSize: '0.9rem' }}>
                 {item.imageUrl && (
                   <div style={{ marginBottom: '0.5rem' }}>
-                    <a href={item.imageUrl} download="�͡���" style={{ color: '#007bff' }}>🖼️ ดูรูปภาพ</a>
+                    <a href={item.imageUrl} target="_blank" rel="noreferrer" style={{ color: '#007bff' }}>🖼️ ดูรูปภาพ</a>
                   </div>
                 )}
                 {item.fileUrl && (
                   <div>
-                    <a href={item.fileUrl} download="�͡���" style={{ color: '#28a745' }}>📄 ไฟล์เอกสาร</a>
+                    <a href={item.fileUrl} target="_blank" rel="noreferrer" style={{ color: '#28a745' }}>📄 ไฟล์เอกสาร</a>
                   </div>
                 )}
                 {!item.imageUrl && !item.fileUrl && <span style={{ color: '#aaa' }}>- ไม่มี -</span>}

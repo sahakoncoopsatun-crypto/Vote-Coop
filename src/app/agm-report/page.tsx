@@ -105,7 +105,7 @@ export default async function AgmReportPage() {
                         )}
                         {agenda.fileUrl && (
                           <div>
-                            <a href={agenda.fileUrl} download="�͡��û�Сͺ����" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: '#e9ecef', color: '#495057', textDecoration: 'none', borderRadius: '4px', fontWeight: 'bold' }}>
+                            <a href={agenda.fileUrl} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: '#e9ecef', color: '#495057', textDecoration: 'none', borderRadius: '4px', fontWeight: 'bold' }}>
                               📄 ดาวน์โหลดเอกสารแนบ
                             </a>
                           </div>

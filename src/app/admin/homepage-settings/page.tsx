@@ -46,28 +46,6 @@ export default function HomepageSettingsPage() {
       });
   }, []);
 
-  const previewPdf = async (e: React.MouseEvent, dataUrl: string) => {
-    e.preventDefault();
-    if (dataUrl.startsWith('data:')) {
-      const newWindow = window.open('', '_blank');
-      if (newWindow) {
-        newWindow.document.write('<div style="font-family:sans-serif;padding:20px;">กำลังเปิดเอกสาร กรุณารอสักครู่...</div>');
-        try {
-          const res = await fetch(dataUrl);
-          const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-          newWindow.location.href = url;
-        } catch (err) {
-          newWindow.location.href = dataUrl;
-        }
-      } else {
-        alert('กรุณาอนุญาต Pop-ups เพื่อดูเอกสาร');
-      }
-    } else {
-      window.open(dataUrl, '_blank');
-    }
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -337,7 +315,7 @@ export default function HomepageSettingsPage() {
                 </div>
                 {form[`candidate_form_${pos.id}` as keyof typeof form] && (
                   <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#28a745', marginBottom: 0 }}>
-                    ✅ มีไฟล์ในระบบแล้ว: <a href="#" onClick={(e) => previewPdf(e, form[`candidate_form_${pos.id}` as keyof typeof form] as string)} style={{ textDecoration: 'underline' }}>ดูไฟล์ปัจจุบัน</a>
+                    ✅ มีไฟล์ในระบบแล้ว: <a href={form[`candidate_form_${pos.id}` as keyof typeof form] as string} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline' }}>ดูไฟล์ปัจจุบัน</a>
                   </p>
                 )}
               </div>

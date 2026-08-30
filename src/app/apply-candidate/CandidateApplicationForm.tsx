@@ -22,28 +22,6 @@ export default function CandidateApplicationForm({
   
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(!!terms); // Only show terms if there are terms configured
-  
-  const previewPdf = async (e: React.MouseEvent, dataUrl: string) => {
-    e.preventDefault();
-    if (dataUrl.startsWith('data:')) {
-      const newWindow = window.open('', '_blank');
-      if (newWindow) {
-        newWindow.document.write('<div style="font-family:sans-serif;padding:20px;">กำลังเปิดเอกสาร กรุณารอสักครู่...</div>');
-        try {
-          const res = await fetch(dataUrl);
-          const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-          newWindow.location.href = url;
-        } catch (err) {
-          newWindow.location.href = dataUrl;
-        }
-      } else {
-        alert('กรุณาอนุญาต Pop-ups เพื่อดูเอกสาร');
-      }
-    } else {
-      window.open(dataUrl, '_blank');
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -177,12 +155,13 @@ export default function CandidateApplicationForm({
               return (
                 <a 
                   key={pos.id}
-                  href="#"
-                  onClick={(e) => previewPdf(e, posData.url)}
+                  href={posData.url} 
+                  target="_blank" 
+                  rel="noreferrer"
                   className="btn"
                   style={{ fontSize: '1rem', padding: '0.6rem 1.5rem', borderRadius: '50px', background: '#0284c7', color: 'white', display: 'inline-block', textDecoration: 'none' }}
                 >
-                  📥 ดาวน์โหลด/ดูใบสมัคร {pos.label}
+                  📥 ดาวน์โหลดใบสมัคร {pos.label}
                 </a>
               );
             })}
