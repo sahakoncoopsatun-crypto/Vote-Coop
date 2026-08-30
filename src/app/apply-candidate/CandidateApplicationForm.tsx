@@ -142,29 +142,43 @@ export default function CandidateApplicationForm({
         <div className="glass-panel" style={{ background: '#f0f9ff', border: '1px solid #bae6fd', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', borderRadius: '12px', padding: '2rem', marginBottom: '2rem', textAlign: 'center' }}>
           <h3 style={{ color: '#0369a1', marginBottom: '1rem' }}>สำหรับผู้ประสงค์ยื่นใบสมัครด้วยตนเอง</h3>
           <p style={{ color: '#0c4a6e', marginBottom: '1.5rem' }}>ท่านสามารถดาวน์โหลดแบบฟอร์มใบสมัครเพื่อนำไปเขียนด้วยตนเอง และนำส่งที่สหกรณ์ฯ</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', alignItems: 'center' }}>
-            {[
-              { id: 'president', label: 'ประธานกรรมการ' },
-              { id: 'committee_hospital', label: 'กรรมการ รพ.สตูล' },
-              { id: 'committee_sso', label: 'กรรมการ สสอ.' },
-              { id: 'auditor', label: 'ผู้ตรวจสอบกิจการ' }
-            ].map(pos => {
-              const posData = positionSettings[pos.id];
-              if (!posData || !posData.open || !posData.url) return null;
-              
-              return (
-                <a 
-                  key={pos.id}
-                  href={posData.url} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="btn"
-                  style={{ fontSize: '1rem', padding: '0.6rem 1.5rem', borderRadius: '50px', background: '#0284c7', color: 'white', display: 'inline-block', textDecoration: 'none' }}
-                >
-                  📥 ดาวน์โหลดใบสมัคร {pos.label}
-                </a>
-              );
-            })}
+          <div style={{ overflowX: 'auto', margin: '0 auto', maxWidth: '600px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+              <thead>
+                <tr style={{ background: '#e0f2fe', color: '#0369a1' }}>
+                  <th style={{ padding: '1rem', borderBottom: '1px solid #bae6fd' }}>ตำแหน่งที่เปิดรับสมัคร</th>
+                  <th style={{ padding: '1rem', borderBottom: '1px solid #bae6fd', textAlign: 'center', width: '150px' }}>ไฟล์ใบสมัคร</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { id: 'president', label: 'ประธานกรรมการ' },
+                  { id: 'committee_hospital', label: 'กรรมการ รพ.สตูล' },
+                  { id: 'committee_sso', label: 'กรรมการ สสอ.' },
+                  { id: 'auditor', label: 'ผู้ตรวจสอบกิจการ' }
+                ].map(pos => {
+                  const posData = positionSettings[pos.id];
+                  if (!posData || !posData.open || !posData.url) return null;
+                  
+                  return (
+                    <tr key={pos.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                      <td style={{ padding: '1rem', color: '#334155', fontWeight: '500' }}>{pos.label}</td>
+                      <td style={{ padding: '0.8rem', textAlign: 'center' }}>
+                        <a 
+                          href={posData.url} 
+                          target="_blank" 
+                          rel="noreferrer"
+                          className="btn"
+                          style={{ fontSize: '0.9rem', padding: '0.5rem 1rem', borderRadius: '6px', background: '#0284c7', color: 'white', display: 'inline-block', textDecoration: 'none' }}
+                        >
+                          📥 ดาวน์โหลด
+                        </a>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
             
             {(!positionSettings.president?.url && !positionSettings.committee_hospital?.url && !positionSettings.committee_sso?.url && !positionSettings.auditor?.url) && (
               <p style={{ color: '#dc2626' }}>ยังไม่มีไฟล์ใบสมัครในระบบ</p>
