@@ -12,12 +12,11 @@ export default function HomepageSettingsPage() {
     election_time: '09:00 - 15:00 น.',
     election_location: 'โรงเรียนสตูลวิทยา ตำบลคลองขุด อำเภอเมืองสตูล จังหวัดสตูล',
     
-    // Toggles and terms
-    menu_check_eligibility: 'true',
+    'menu_check-eligibility': 'true',
     menu_candidates: 'true',
     menu_results: 'true',
-    menu_apply_candidate: 'true',
-    menu_apply_officer: 'true',
+    'menu_apply-candidate': 'true',
+    'menu_apply-officer': 'true',
     require_officer_photo: 'true',
     require_officer_idcard: 'true',
     officer_terms: 'ข้าพเจ้าขอรับรองว่าข้อมูลที่กรอกทั้งหมดเป็นความจริง และยินยอมให้สหกรณ์ตรวจสอบข้อมูลส่วนบุคคลเพื่อประกอบการพิจารณา',

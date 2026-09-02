@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(request: Request) {
   const keys = [
@@ -95,6 +96,8 @@ export async function POST(request: Request) {
       });
     }
   }
+
+  revalidatePath('/', 'layout');
 
   return NextResponse.json({ success: true });
 }
