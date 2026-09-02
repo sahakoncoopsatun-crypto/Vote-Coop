@@ -10,17 +10,8 @@ export async function submitApplication(formData: FormData) {
   const idCard = formData.get('idCard') as string;
   const phone = formData.get('phone') as string;
   const districtId = parseInt(formData.get('districtId') as string);
+  const name = formData.get('name') as string;
 
-  // Verify eligibility
-  const eligibility = await prisma.eligibility.findFirst({
-    where: { memberId, idCard }
-  });
-
-  if (!eligibility) {
-    return { success: false, message: 'ไม่พบข้อมูล หรือเลขสมาชิก/เลขบัตรประชาชนไม่ถูกต้อง' };
-  }
-
-  // Check if they already applied to this district
   const existingApp = await prisma.officerApplication.findFirst({
     where: { memberId, districtId }
   });
@@ -72,7 +63,7 @@ export async function submitApplication(formData: FormData) {
   await prisma.officerApplication.create({
     data: {
       memberId,
-      name: eligibility.name,
+      name,
       phone,
       districtId,
       jobTitle,

@@ -132,6 +132,11 @@ export default function ApplicationForm({ districts, terms, requirePhoto, requir
           </div>
         </div>
 
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem' }}>ชื่อ - นามสกุล <span style={{color: 'red'}}>*</span></label>
+          <input type="text" name="name" required style={{ width: '100%', padding: '0.75rem', border: '1px solid #ccc', borderRadius: '4px' }} placeholder="ตัวอย่าง นายใจดี รักสหกรณ์" />
+        </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem' }}>ตำแหน่ง</label>
